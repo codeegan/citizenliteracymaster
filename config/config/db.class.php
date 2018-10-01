@@ -3,38 +3,41 @@
 class db
 {
 
-    private $dbhost = 'localhost'; //$_SERVER['RDS_HOSTNAME'];
-    private $dbport = '3306';//= $_SERVER['RDS_PORT'];
-    private $dbname = 'ip47'; // = $_SERVER['RDS_DB_NAME'];
+    private $dbhost; //$_SERVER['RDS_HOSTNAME'];
+    private $dbport;//= $_SERVER['RDS_PORT'];
+    private $dbname; // = $_SERVER['RDS_DB_NAME'];
     private $charset = 'utf8';
-    public $testdsn;
     private $dsn;
-    private $username = 'ip47admin';
-    private $password = 'ip47admin';
+    private $localDsn;
+    private $username;
+    private $password;
     private $error = "no message yet";
     public $database;
 
-    function __construct(){
+    function __construct()
+    {
         //configure the DSN connection details for the environment
         $this->setDbhost();
         $this->setDbport();
         $this->setDbname();
         $this->setUsername();
         $this->setPassword();
-        $this->setTestDsn();
+        $this->setDsn();
     }
+
+    //used for testing the class with a local server
+    private function setLocalDsn($host,$port,$name)
+    {
+        $this->localDsn = "mysql:host=$host;port=$port;dbname=$name;charset={$this->charset}";
+    }
+
 
     private function setDsn()
     {
         $this->dsn = "mysql:host={$this->dbhost};port={$this->dbport};dbname={$this->dbname};charset={$this->charset}";
     }
 
-    private function setTestDsn()
-    {
-        $this->testdsn = "mysql:host={$this->dbhost};port={$this->dbport};dbname={$this->dbname};charset={$this->charset}";
-    }
-
-     private function setDbhost()
+    private function setDbhost()
     {
         $this->dbhost = $_SERVER['RDS_HOSTNAME'];
     }
@@ -50,9 +53,9 @@ class db
     }
 
 
-    public function getTestDsn()
+    public function getLocalDsn()
     {
-        return $this->testdsn;
+        return $this->localDsn;
     }
 
 
@@ -79,16 +82,13 @@ class db
         return $this->error;
     }
 
-    /**
-     * @return mixed
-     */
     public function setError($msg)
     {
         $this->error = $msg;
     }
 
     //create the connection
-    public function getPdoConnection()
+    public function getPdo()
     {
         $this->database = null;
         try {
@@ -99,6 +99,21 @@ class db
                 $exception->getMessage() . ' in ' . $exception->getFile() . ':' . $exception->getLine()
             );
         }
+    }
+
+    public function getLocalPdo($host,$name,$port,$user,$pass)
+    {
+        $this->setLocalDsn($host,$port,$name);
+        $this->database = null;
+        try {
+            $this->database = new PDO($this->localDsn, $user, $pass);
+            return $this->database;
+        } catch (PDOException $exception) {
+            $this->setError("Connection error: " . $exception->getMessage() .
+                $exception->getMessage() . ' in ' . $exception->getFile() . ':' . $exception->getLine()
+            );
+        }
+        echo '<p>Created PDO connection</p>';
     }
 
 }
