@@ -8,7 +8,7 @@
     <meta name="keywords" content="">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link href="https://fonts.googleapis.com/css?family=Varela+Round" rel="stylesheet">
-    <link rel="stylesheet" href="/css/style_main.css">
+    <link rel="stylesheet" href="css/style_main.css">
 </head>
 
 <body onload="fadeIn()">
@@ -66,19 +66,19 @@
         </button>
 
         <div class="options-container">
-            <button onclick="response1()" value="s" id="option1" class="options">s</button>
-            <button onclick="response2()" value="a" id="option2" class="options">a</button>
-            <button onclick="response3()" value="p" id="option3" class="options">p</button>
-            <button onclick="response4()" value="t" id="option4" class="options">t</button>
-            <button onclick="response5()" value="i" id="option5" class="options">i</button>
-            <button onclick="response6()" value="n" id="option6" class="options">n</button>
+            <button onclick="postSelection(this.value)" value="s" id="option1" class="options">s</button>
+            <button onclick="postSelection(this.value)" value="a" id="option2" class="options">a</button>
+            <button onclick="postSelection(this.value)" value="p" id="option3" class="options">p</button>
+            <button onclick="postSelection(this.value)" value="t" id="option4" class="options">t</button>
+            <button onclick="postSelection(this.value)" value="i" id="option5" class="options">i</button>
+            <button onclick="postSelection(this.value)" value="n" id="option6" class="options">n</button>
         </div>
 
         <div id="response-container"></div>
 
 
-        <script src="js/script_main.js"></script>
-        <script src="js/selection_response.js"></script>
+        <script src="js/main.js"></script>
+        <script src="js/selection.js"></script>
 
     </div>
 </body>
