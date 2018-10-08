@@ -1,15 +1,15 @@
 /* Homepage Redirects */
 
 function handwritingUrl() {
-    window.location.assign("/handwriting.html")
+    window.location.assign("handwriting.html")
 }
 
 function audioUrl() {
-    window.location.assign("/selection.html")
+    window.location.assign("selection.html")
 }
 
 function voiceUrl() {
-    window.location.assign("/voice.html")
+    window.location.assign("voice.html")
 }
 
 function nextUrl() {
