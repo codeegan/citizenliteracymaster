@@ -11,44 +11,43 @@
     <link rel="stylesheet" href="css/style_main.css">
 </head>
 
-<body onload="fadeIn()">
-    <div class="container">
-        <div class="header-container">
-            <h2 class="heading">Citizen Literacy</h2>
-        </div>
+<!--<body>-->
 
-        <div class="card-container">
+<body onload="setTimeout(spalshHide, 2000), setTimeout(spalshDisplay, 3000), fadeIn()">
 
-            <div class="card" id="voice" onclick="voiceUrl()">
-                <img src="img/mic.png" class="title-image" alt="Voice Activity">
-                <div class="link-container">
-                    <h2 class="sub-heading link">Voice Title
-                        <i class="right"></i>
-                    </h2>
-                </div>
-            </div>
-
-            <div class="card" id="audio" onclick="selectionUrl()">
-                <img src="img/ear.png" class="title-image" alt="Audio Activity">
-                <div class="link-container">
-                    <h2 class="sub-heading link">Audio Title
-                        <i class="right"></i>
-                    </h2>
-                </div>
-            </div>
-
-            <div class="card" id="handwriting" onclick="handwritingUrl()">
-                <img src="img/touch.png" class="title-image" alt="Handwriting Activity">
-                <div class="link-container">
-                    <h2 class="sub-heading link">Handwriting Title
-                        <i class="right"></i>
-                    </h2>
-                </div>
-            </div>
-        </div>
-
-        <script src="js/main.js"></script>
+    <div class="header-container">
+        <h2 class="heading">Citizen Literacy</h2>
     </div>
+
+    <div id="splash" class="loading" onclick="selectionUrl()">
+        <img src="img/logo_main.png" alt="Citizen Literacy Logo" class="splash-logo">
+        <div class="splash-title">Citizen Literacy</div>
+    </div>
+
+    <div class="card-container">
+
+        <div class="card" id="voice" onclick="voiceUrl()">
+            <img src="img/mic.png" class="title-image" alt="Voice Activity">
+            <h2 class="sub-heading">Voice Title</h2>
+        </div>
+
+        <div class="card" id="audio" onclick="audioUrl()">
+            <img src="img/ear.png" class="title-image" alt="Audio Activity">
+            <h2 class="sub-heading">Audio Title</h2>
+        </div>
+		
+		<div class="card" id="audio" onclick="selectionUrl()">
+            <img src="img/select.png" class="title-image" alt="Selection Activity">
+            <h2 class="sub-heading">Selection Title</h2>
+        </div>
+
+        <div class="card" id="handwriting" onclick="handwritingUrl()">
+            <img src="img/touch.png" class="title-image" alt="Handwriting Activity">
+            <h2 class="sub-heading">Handwriting Title</h2>
+        </div>
+    </div>
+
+    <script src="js/main.js"></script>
 
 </body>
 
