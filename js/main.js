@@ -1,20 +1,3 @@
-// Inject 'back to main' button
-window.addEventListener('load', function() {
-	// Do nothing for main page 
-	if((window.location + "").endsWith('index.html')) return;
-	// 1. Create the button
-	var button = document.createElement("button");
-	button.innerHTML = "Back to main";
-	button.className = "btn-main";
-
-	// 2. Append somewhere
-	var body = document.getElementsByTagName("body")[0];
-	body.appendChild(button);
-
-	// 3. Add event handler
-	button.addEventListener ("click", backToMain);
-
-});
 
 /* Splash Screen */
 
@@ -49,6 +32,11 @@ function selectionUrl() {
 	window.location.assign("selection.html");
 }
 
+function nextUrl() {
+    window.location.assign("index.html")
+}
+
+
 function init() {
 	// Anything that you want to init ???
 }
@@ -56,3 +44,44 @@ function init() {
 function fadeIn(){
     document.getElementsByTagName("BODY")[0].classList.add("bodyLoad");
 }
+
+
+/* Responses */
+
+ function retryCorrect(){
+     
+     var element = document.getElementById("response-correct-container");
+     element.classList.add("reverse-active");
+     
+     var element = document.getElementById("response-correct-container");
+     element.classList.remove("correct-active");
+     
+     delay();
+     
+     function delay() {
+        setTimeout(function(){
+           var element = document.getElementById("response-correct-wrapper");
+            element.classList.add("inactive");
+        }, 500);
+     };
+   
+ }
+
+ function retryIncorrect(){
+     
+     var element = document.getElementById("response-incorrect-container");
+     element.classList.add("reverse-active-incorrect");
+     
+     var element = document.getElementById("response-incorrect-container");
+     element.classList.remove("incorrect-active");
+     
+     delay();
+     
+     function delay() {
+        setTimeout(function(){
+           var element = document.getElementById("response-incorrect-wrapper");
+            element.classList.add("inactive");
+        }, 500);
+     };
+   
+ }

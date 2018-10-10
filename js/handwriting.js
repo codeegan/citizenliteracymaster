@@ -106,10 +106,27 @@ function save() {
             if (response.status === true) {
                 //show success
 				clearCanvas(canvas, ctx);
-				alert("Save Ok. Filename: " + response.filename)
+				console.log("Save Ok. Filename: " + response.filename);
+				
+				var element = document.getElementById("response-correct-container");
+                element.classList.remove("reverse-active");
+                var element = document.getElementById("response-correct-wrapper");
+                element.classList.remove("inactive");
+                var element = document.getElementById("response-correct-container");
+                element.classList.add("correct-active");
+                var element = document.getElementById("response-correct-wrapper");
+                element.classList.add("correct-wrapper");
             } else {
                 //show try again
 				console.log(response.error);
+				var element = document.getElementById("response-incorrect-container");
+                element.classList.remove("reverse-active");
+                var element = document.getElementById("response-incorrect-wrapper");
+                element.classList.remove("inactive");
+                var element = document.getElementById("response-incorrect-container");
+                element.classList.add("incorrect-active");
+                var element = document.getElementById("response-incorrect-wrapper");
+                element.classList.add("incorrect-wrapper");
             };
         }
     };

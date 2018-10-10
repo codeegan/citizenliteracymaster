@@ -1,3 +1,13 @@
+var audioClip = document.getElementById("myAudio");
+
+function playAudio() {
+    audioClip.play();
+}
+
+function pauseAudio() {
+    audioClip.pause();
+}
+
 function postSelection(letter) {
 	const API_URL = 'receive_selection.php';
 	var xmlhttp = new XMLHttpRequest();
@@ -12,14 +22,24 @@ function postSelection(letter) {
             if (response.status === true) {
                 //success state
 				
-				// Don't forget to remove class that we will not use anymore 
-                document.getElementById("response-container").classList.remove("incorrect");
-				// After that append new class (same thing but in reverse for 'fail state')
-				document.getElementById("response-container").classList.add("correct");				
+				var element = document.getElementById("response-correct-container");
+                element.classList.remove("reverse-active");
+                var element = document.getElementById("response-correct-wrapper");
+                element.classList.remove("inactive");
+                var element = document.getElementById("response-correct-container");
+                element.classList.add("correct-active");
+                var element = document.getElementById("response-correct-wrapper");
+                element.classList.add("correct-wrapper");		
             } else {
                 //fail state
-                document.getElementById("response-container").classList.remove("correct");
-				document.getElementById("response-container").classList.add("incorrect");				
+                var element = document.getElementById("response-incorrect-container");
+                element.classList.remove("reverse-active");
+                var element = document.getElementById("response-incorrect-wrapper");
+                element.classList.remove("inactive");
+                var element = document.getElementById("response-incorrect-container");
+                element.classList.add("incorrect-active");
+                var element = document.getElementById("response-incorrect-wrapper");
+                element.classList.add("incorrect-wrapper");				
             };
         }
     };

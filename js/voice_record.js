@@ -1,12 +1,8 @@
 window.addEventListener('load', function() {
 	const API_URL = 'receive_voice.php';
-	var player = document.getElementById('player');
-	var recordButton = document.getElementById('record');
-	var stopButton = document.getElementById('stop');
-	var playButton = document.getElementById('play');
-	var soundClips = document.getElementById('soundClips');
+	const TIMEOUT = 3000; // 3 seconds
 	
-	stopButton.disabled = true;
+	var recordButton = document.getElementById('record');	
 	
 	try {
 		const audioConstraints = {audio: true, video: false};
@@ -18,7 +14,8 @@ window.addEventListener('load', function() {
 		
 		var handleSuccess = function(stream) {
 			console.log('Success');
-
+			
+			// Find mimeType that can be used for this browser
 			var options;
 			if (MediaRecorder.isTypeSupported('audio/webm;codecs=opus')) {
 				options = {mimeType: 'audio/webm;codecs=opus'};
@@ -38,13 +35,13 @@ window.addEventListener('load', function() {
 			recordButton.onclick = function() {
 				mediaRecorder.start();
 				recordButton.disabled = true;
-				stopButton.disabled = false;
-			}
-
-			stopButton.onclick = function() {
-				mediaRecorder.stop();
-				recordButton.disabled = false;
-				stopButton.disabled = true;
+				
+				document.getElementById("left-load").classList.add("left-load-block-animation");
+				document.getElementById("right-load").classList.add("right-load-block-animation");
+				
+				setTimeout(function () {
+					mediaRecorder.stop();
+				}, TIMEOUT);
 			}
 			
 			mediaRecorder.ondataavailable = function(e) {
@@ -54,70 +51,62 @@ window.addEventListener('load', function() {
 			
 			
 			mediaRecorder.onstop = function(e) {
-				console.log("data available after MediaRecorder.stop() called.");
+				recordButton.disabled = false;
+				document.getElementById("left-load").classList.remove("left-load-block-animation");
+				document.getElementById("right-load").classList.remove("right-load-block-animation");
 
-				var clipName = prompt('Enter a name for your sound clip');
-
-				var clipContainer = document.createElement('article');
-				var clipLabel = document.createElement('p');
-				var audio = document.createElement('audio');
-				var deleteButton = document.createElement('button');
-				var uploadButton = document.createElement('button');
-				
-
-				clipContainer.classList.add('clip');
-				audio.setAttribute('controls', '');
-				uploadButton.innerHTML = "Upload";
-				uploadButton.className = 'btn-main';
-				deleteButton.innerHTML = "Delete";				
-				clipLabel.innerHTML = clipName;
-
-				clipContainer.appendChild(audio);
-				clipContainer.appendChild(clipLabel);
-				clipContainer.appendChild(uploadButton);
-				clipContainer.appendChild(deleteButton);
-				soundClips.appendChild(clipContainer);
-
-				audio.controls = true;
 				var blob = new Blob(chunks, { 'type' : options.mimeType });
 				chunks = [];
 				
 				var audioURL = ( window.URL || window.webkitURL ).createObjectURL(blob);
-				audio.src = audioURL;
 
-				uploadButton.onclick = function(e) {
-					// Get previous node text (filename)
-					var filename = this.previousSibling.innerHTML;
-					
-					// Create and execute ajax request 
-					var xmlhttp = new XMLHttpRequest();
-					xmlhttp.onreadystatechange = function () {
-						if (this.readyState == 4 && this.status == 200) {
-							console.log(this.responseText);
-							var response = JSON.parse(this.responseText);
-						   
-							// To Remove on prod
-							console.log(response.status);
-
-							if (response.status === true) {
-								alert("Save Ok. Filename: " + response.name)
-							} else {
-								//show try again
-								console.log(response.error);
-							};
-						}
-					};
-					// Make an form data object and send them to the remote server
-					var formData = new FormData();
-					formData.append("voice_file", blob, filename);
-					xmlhttp.open("POST", API_URL, true);
-					xmlhttp.send(formData);
-				}
+				// Create AJAX request and upload voice file to remote server
+				// Create filename
+				var newDate = new Date();
+				var filename = "voice_" + newDate.toISOString().slice(0, 19).replace('T', '_').replace(':', '_').replace(':', '_');
 				
-				deleteButton.onclick = function(e) {
-					evtTgt = e.target;
-					evtTgt.parentNode.parentNode.removeChild(evtTgt.parentNode);
-				}
+				// Create and execute ajax request 
+				var xmlhttp = new XMLHttpRequest();
+				xmlhttp.onreadystatechange = function () {
+					if (this.readyState == 4 && this.status == 200) {
+						console.log(this.responseText);
+						var response = JSON.parse(this.responseText);
+					   
+						// To Remove on prod
+						console.log(response.status);
+
+						if (response.status === true) {
+							console.log("Save Ok. Filename: " + response.name)
+							
+							var element = document.getElementById("response-correct-container");
+							element.classList.remove("reverse-active");
+							var element = document.getElementById("response-correct-wrapper");
+							element.classList.remove("inactive");
+							var element = document.getElementById("response-correct-container");
+							element.classList.add("correct-active");
+							var element = document.getElementById("response-correct-wrapper");
+							element.classList.add("correct-wrapper");
+							
+						} else {
+							//show try again
+							console.log(response.error);
+							var element = document.getElementById("response-incorrect-container");
+							element.classList.remove("reverse-active");
+							var element = document.getElementById("response-incorrect-wrapper");
+							element.classList.remove("inactive");
+							var element = document.getElementById("response-incorrect-container");
+							element.classList.add("incorrect-active");
+							var element = document.getElementById("response-incorrect-wrapper");
+							element.classList.add("incorrect-wrapper");
+						};
+					}
+				};
+				// Make an form data object and send them to remote server
+				var formData = new FormData();
+				formData.append("voice_file", blob, filename);
+				xmlhttp.open("POST", API_URL, true);
+				xmlhttp.send(formData);
+
 				console.log(blob);
 			}
 			
@@ -134,7 +123,7 @@ window.addEventListener('load', function() {
 			
 	} catch(err) {
 		console.log(e);
-		alert('Opps.. Your browser do not support audio API');
+		alert('Oops.. Your browser do not support audio API');
 	}
 			
 }, false);
