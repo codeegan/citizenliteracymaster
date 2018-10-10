@@ -86,10 +86,10 @@ function init() {
 }
 
 function save() {
-
+	const API_URL = 'receive_img.php';
     var dataURL = canvas.toDataURL();
-
-    // Remove this in prod //
+    
+    // Remove this in prod
     console.log(dataURL);
 
 
@@ -97,37 +97,25 @@ function save() {
     var xmlhttp = new XMLHttpRequest();
     xmlhttp.onreadystatechange = function () {
         if (this.readyState == 4 && this.status == 200) {
-
+			console.log(this.responseText);
             var response = JSON.parse(this.responseText);
-
+           
             // To Remove on prod
             console.log(response.status);
 
             if (response.status === true) {
-
-                var element = document.getElementById("response-correct-container");
-                element.classList.remove("reverse-active");
-                var element = document.getElementById("response-correct-wrapper");
-                element.classList.remove("inactive");
-                var element = document.getElementById("response-correct-container");
-                element.classList.add("correct-active");
-                var element = document.getElementById("response-correct-wrapper");
-                element.classList.add("correct-wrapper");
-
+                //show success
+				clearCanvas(canvas, ctx);
+				alert("Save Ok. Filename: " + response.filename)
             } else {
-                var element = document.getElementById("response-incorrect-container");
-                element.classList.remove("reverse-active");
-                var element = document.getElementById("response-incorrect-wrapper");
-                element.classList.remove("inactive");
-                var element = document.getElementById("response-incorrect-container");
-                element.classList.add("incorrect-active");
-                var element = document.getElementById("response-incorrect-wrapper");
-                element.classList.add("incorrect-wrapper");
+                //show try again
+				console.log(response.error);
             };
         }
     };
-    xmlhttp.open("GET", "response.json", true);
-    xmlhttp.send();
-
-    clearCanvas(canvas, ctx)
+    xmlhttp.open("POST", API_URL, true);
+	xmlhttp.setRequestHeader("Content-Type", "application/json");
+    xmlhttp.send(JSON.stringify( { imgBase64Data: dataURL } ));
+    
+    
 }

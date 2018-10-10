@@ -1,24 +1,17 @@
-function sendFormData(form) {
-	var file = form['audio_file'].files[0];
-	console.log(file);
-	const API_URL = 'receive_audio.php';
-	
+function postSelection(letter) {
+	const API_URL = 'receive_selection.php';
 	var xmlhttp = new XMLHttpRequest();
-	
-	
-	xmlhttp.upload.onprogress = function(event) {
-		console.log(event.loaded + ' / ' + event.total);
-	}
-	
     xmlhttp.onreadystatechange = function () {
         if (this.readyState == 4 && this.status == 200) {
+
             var response = JSON.parse(this.responseText);
             
             //Remove on prod
-            console.log(response);
+            console.log(response.status);
 
             if (response.status === true) {
-                //success state				
+                //success state
+				
 				// Don't forget to remove class that we will not use anymore 
                 document.getElementById("response-container").classList.remove("incorrect");
 				// After that append new class (same thing but in reverse for 'fail state')
@@ -30,13 +23,10 @@ function sendFormData(form) {
             };
         }
     };
-	
-	
-	var form_data = new FormData();  
-	form_data.append('audio_file', file);
-	xmlhttp.open("POST", API_URL, true);
-	xmlhttp.send(form_data);
-	
-	// Do not submit form
-	return false;
+	// Send async request 
+    xmlhttp.open("POST", API_URL, true);
+	// We want to send data as json
+	xmlhttp.setRequestHeader("Content-Type", "application/json");
+	// post values
+    xmlhttp.send(JSON.stringify( { selectedLetter: letter } ));
 }
